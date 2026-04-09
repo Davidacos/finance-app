@@ -3,7 +3,9 @@
 import { useEffect, useCallback } from "react";
 import { categoryService } from "@/services/category.service";
 import { useFinanceStore } from "@/store/financeStore";
-import { CreateCategoryDTO, UpdateCategoryDTO } from "@/types/category";
+import { Category, CreateCategoryDTO, UpdateCategoryDTO } from "@/types/category";
+
+export type { Category };
 import { toast } from "sonner";
 
 /**

@@ -1,6 +1,7 @@
 "use client"
 
 import { Menu, Bell, Moon, Sun, LogOut } from "lucide-react"
+import Image from "next/image"
 import { useDashboard } from "@/hooks/useDashboard"
 import { useAuth } from "@/hooks/useAuth"
 import { useTheme } from "next-themes"
@@ -28,14 +29,23 @@ export function Header({ onMenuClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-card/70 backdrop-blur-xl border-b border-border/50">
       <div className="flex items-center justify-between px-5 py-4 lg:px-8">
-        {/* Left side - Menu button (mobile) */}
-        <button
-          onClick={onMenuClick}
-          className="lg:hidden p-2.5 rounded-xl hover:bg-muted text-muted-foreground transition-colors"
-          aria-label="Abrir menú"
-        >
-          <Menu className="h-5 w-5" strokeWidth={1.5} />
-        </button>
+        {/* Left side - Menu button and Logo (mobile) */}
+        <div className="flex items-center gap-3 lg:hidden">
+          <button
+            onClick={onMenuClick}
+            className="p-2.5 rounded-xl hover:bg-muted text-muted-foreground transition-colors"
+            aria-label="Abrir menú"
+          >
+            <Menu className="h-5 w-5" strokeWidth={1.5} />
+          </button>
+          <Image 
+            src="/logos/logo_solo.png" 
+            alt="Fenix Finance" 
+            width={32} 
+            height={32} 
+            className="object-contain" 
+          />
+        </div>
 
         {/* Center/Left - Balance */}
         <div className="flex-1 lg:flex-none">

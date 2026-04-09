@@ -14,25 +14,13 @@ const inter = Inter({
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "FinanzasApp - Control de Finanzas Personales",
-  description: "Aplicación para gestionar ingresos, gastos y presupuesto personal de manera simple y efectiva",
+  title: "Fenix Finance - Pro Edition",
+  description: "Tu aplicación premium para gestionar ingresos, gastos y presupuesto de manera automatizada.",
   generator: "v0.app",
+  manifest: "/manifest.json",
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
+    icon: "/logos/logo_solo.png",
+    apple: "/logos/logo_solo.png",
   },
 }
 

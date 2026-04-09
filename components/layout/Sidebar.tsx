@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { LayoutDashboard, ArrowLeftRight, PlusCircle, Tags, Settings, X, Wallet, LogOut, Repeat, BarChart3, FileBox } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
@@ -53,14 +54,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         {/* Logo & Close button */}
         <div className="flex items-center justify-between px-6 py-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-500 shadow-xl shadow-indigo-500/20">
-              <Wallet className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <span className="text-xl font-black text-foreground tracking-tighter">FinanceApp</span>
-              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Pro Edition</p>
-            </div>
+          <Link href="/" className="flex items-center gap-3 w-full">
+            <Image 
+              src="/logos/logo_fenixFinance_letraazul.png" 
+              alt="Fenix Finance" 
+              width={180} 
+              height={48} 
+              className="object-contain dark:hidden" 
+              priority
+            />
+            <Image 
+              src="/logos/logo_fenixFinance_letrablanca.png" 
+              alt="Fenix Finance" 
+              width={180} 
+              height={48} 
+              className="object-contain hidden dark:block" 
+              priority
+            />
           </Link>
           <button
             onClick={onClose}
