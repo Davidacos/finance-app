@@ -10,13 +10,14 @@ interface MonthlyDataItem {
 
 interface BalanceChartProps {
   data?: MonthlyDataItem[]
+  currency?: string
 }
 
 /**
  * Balance Chart Component
  * Shows income vs expenses over time from props
  */
-export function BalanceChart({ data = [] }: BalanceChartProps) {
+export function BalanceChart({ data = [], currency = "COP" }: BalanceChartProps) {
   // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload) return null
@@ -28,7 +29,7 @@ export function BalanceChart({ data = [] }: BalanceChartProps) {
           <div key={index} className="flex items-center gap-2 text-sm font-semibold mb-1">
             <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
             <span style={{ color: entry.color }}>
-              {entry.name}: {formatCurrency(entry.value, "USD")}
+              {entry.name}: {formatCurrency(entry.value, currency)}
             </span>
           </div>
         ))}
@@ -58,7 +59,7 @@ export function BalanceChart({ data = [] }: BalanceChartProps) {
               <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
           <XAxis
             dataKey="name"
             stroke="rgba(148, 163, 184, 0.5)"
@@ -74,7 +75,7 @@ export function BalanceChart({ data = [] }: BalanceChartProps) {
             axisLine={false}
             tickFormatter={(value) => `$${value}`}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(148, 163, 184, 0.2)', strokeWidth: 1 }} />
           <Legend 
             verticalAlign="top" 
             align="right" 

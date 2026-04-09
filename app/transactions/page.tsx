@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Search, ArrowUpDown, Filter } from "lucide-react"
 import { useTransactions } from "@/hooks/useTransactions"
 import { useCategories } from "@/hooks/useCategories"
+import { useAuth } from "@/hooks/useAuth"
 import { MainLayout } from "@/components/layout/MainLayout"
 import { TransactionList } from "@/components/transactions/TransactionList"
 import { Input } from "@/components/ui/input"
@@ -25,6 +26,7 @@ export default function TransactionsPage() {
   } = useTransactions()
   
   const { categories, isLoading: isCategoriesLoading } = useCategories()
+  const { user } = useAuth()
 
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -140,6 +142,7 @@ export default function TransactionsPage() {
         <TransactionList 
           transactions={transactions} 
           isLoading={isTransactionsLoading}
+          currency={user?.currency_code || "COP"}
         />
       </div>
     </MainLayout>

@@ -30,7 +30,7 @@ export function TransactionForm({ initialData = null, onSuccess }: TransactionFo
   const [formData, setFormData] = useState({
     type: initialData?.type || "expense",
     amount: initialData?.amount || "",
-    category_id: initialData?.category_id || "",
+    category_id: initialData?.category_id || "none",
     payment_method: initialData?.payment_method || "cash",
     transaction_date: initialData?.transaction_date || getCurrentDateISO(),
     description: initialData?.description || "",
@@ -59,10 +59,6 @@ export function TransactionForm({ initialData = null, onSuccess }: TransactionFo
       newErrors.amount = "Ingresa un monto válido"
     }
 
-    if (!formData.category_id) {
-      newErrors.category_id = "Selecciona una categoría"
-    }
-
     if (!formData.transaction_date) {
       newErrors.transaction_date = "Selecciona una fecha"
     }
@@ -83,7 +79,7 @@ export function TransactionForm({ initialData = null, onSuccess }: TransactionFo
       const transactionData: CreateTransactionDTO = {
         type: formData.type as any,
         amount: Number(formData.amount),
-        category_id: formData.category_id,
+        category_id: (formData.category_id && formData.category_id !== "none") ? formData.category_id : null,
         payment_method: formData.payment_method,
         transaction_date: formData.transaction_date,
         description: formData.description,
@@ -160,11 +156,14 @@ export function TransactionForm({ initialData = null, onSuccess }: TransactionFo
 
       {/* Category Select */}
       <div className="space-y-2">
-        <label className="text-sm font-semibold text-foreground ml-1">Categoría *</label>
+        <label className="text-sm font-semibold text-foreground ml-1">Categoría (Opcional)</label>
         <SimpleSelect
-          value={formData.category_id}
+          value={formData.category_id || ""}
           onChange={(e) => handleChange("category_id", e.target.value)}
-          options={categoriesList.map((c) => ({ value: c.id, label: c.name }))}
+          options={[
+            { value: "none", label: "Ninguna / Manual (usar descripción)" },
+            ...categoriesList.map((c) => ({ value: c.id, label: c.name }))
+          ]}
           placeholder="Selecciona una categoría"
           className={cn(
             "h-12 bg-muted/30 border-none rounded-xl",

@@ -16,7 +16,7 @@ interface RecentTransactionsProps {
  * Recent Transactions Component
  * Shows the last transactions from props
  */
-export function RecentTransactions({ transactions, currency = "USD" }: RecentTransactionsProps) {
+export function RecentTransactions({ transactions, currency = "COP" }: RecentTransactionsProps) {
   if (transactions.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">

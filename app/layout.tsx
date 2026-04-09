@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { AuthGuard } from "@/components/auth/AuthGuard"
+import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "sonner"
 import "./globals.css"
 
@@ -51,11 +52,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="h-full">
-      <body className="font-sans antialiased min-h-full font-sans">
-        <AuthGuard>
-          {children}
-        </AuthGuard>
+    <html lang="es" className="h-full" suppressHydrationWarning>
+      <body className="font-sans antialiased min-h-full" suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <AuthGuard>
+            {children}
+          </AuthGuard>
+        </ThemeProvider>
         <Toaster position="top-right" richColors />
         <Analytics />
       </body>

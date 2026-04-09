@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { LayoutDashboard, ArrowLeftRight, PlusCircle, Tags, Settings, X, Wallet, LogOut } from "lucide-react"
+import { LayoutDashboard, ArrowLeftRight, PlusCircle, Tags, Settings, X, Wallet, LogOut, Repeat, BarChart3, FileBox } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 
@@ -17,6 +17,8 @@ interface SidebarProps {
 const navItems = [
   { href: "/", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/transactions", icon: ArrowLeftRight, label: "Transacciones" },
+  { href: "/fixed-expenses", icon: Repeat, label: "Gastos Fijos" },
+  { href: "/reports", icon: BarChart3, label: "Reportes" },
   { href: "/add-transaction", icon: PlusCircle, label: "Nueva Transacción" },
   { href: "/categories", icon: Tags, label: "Categorías" },
   { href: "/settings", icon: Settings, label: "Configuración" },

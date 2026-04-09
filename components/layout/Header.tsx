@@ -3,6 +3,7 @@
 import { Menu, Bell, Moon, Sun, LogOut } from "lucide-react"
 import { useDashboard } from "@/hooks/useDashboard"
 import { useAuth } from "@/hooks/useAuth"
+import { useTheme } from "next-themes"
 import { formatCurrency } from "@/utils/formatters"
 
 interface HeaderProps {
@@ -16,11 +17,10 @@ interface HeaderProps {
 export function Header({ onMenuClick }: HeaderProps) {
   const { balance, isLoading } = useDashboard()
   const { logout, user } = useAuth()
+  const { theme, setTheme } = useTheme()
 
-  // For now, theme is managed locally or via document class
-  // We can add it to auth store later
   const toggleTheme = () => {
-    document.documentElement.classList.toggle("dark")
+    setTheme(theme === "dark" ? "light" : "dark")
   }
 
   const isPositive = balance >= 0
@@ -45,7 +45,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               <div className="h-7 w-24 bg-muted animate-pulse rounded-lg" />
             ) : (
               <p className={`text-2xl font-black tracking-tight ${isPositive ? "text-emerald-500" : "text-rose-500"}`}>
-                {formatCurrency(balance, "USD")}
+                {formatCurrency(balance, user?.currency_code || "COP")}
               </p>
             )}
           </div>

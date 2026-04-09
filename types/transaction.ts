@@ -19,7 +19,7 @@ export interface Transaction {
 }
 
 export interface CreateTransactionDTO {
-  category_id: string;
+  category_id?: string | null;
   type: TransactionType;
   amount: number;
   description: string;

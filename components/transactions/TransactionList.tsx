@@ -14,13 +14,14 @@ import { Transaction } from "@/types/transaction"
 interface TransactionListProps {
   transactions: Transaction[]
   isLoading?: boolean
+  currency?: string
 }
 
 /**
  * Transaction List Component
  * Displays transactions grouped by date with premium styling
  */
-export function TransactionList({ transactions, isLoading }: TransactionListProps) {
+export function TransactionList({ transactions, isLoading, currency = "COP" }: TransactionListProps) {
   const { deleteTransaction } = useTransactions()
 
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
@@ -73,7 +74,7 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
         {Object.entries(groupedTransactions).map(([date, items]) => (
           <div key={date} className="space-y-3">
             {/* Date Header */}
-            <h3 className="text-sm font-bold text-muted-foreground/80 uppercase tracking-widest pl-1">
+            <h3 className="text-base font-black text-muted-foreground/80 uppercase tracking-widest pl-1 mt-2">
               {formatDate(date, "long")}
             </h3>
 
@@ -86,59 +87,67 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
                 return (
                   <div
                     key={transaction.id}
-                    className="group flex items-center gap-4 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all"
+                    className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all relative overflow-hidden"
                   >
-                    {/* Icon - Colored by Category or Type */}
-                    <div
-                      className={cn(
-                        "flex items-center justify-center w-12 h-12 rounded-2xl transition-transform group-hover:scale-105",
-                        isIncome ? "bg-emerald-500/10" : "bg-rose-500/10",
-                      )}
-                      style={category?.color ? { backgroundColor: `${category.color}15` } : {}}
-                    >
-                      {isIncome ? (
-                        <ArrowDownLeft className="h-6 w-6 text-emerald-500" />
-                      ) : (
-                        <ArrowUpRight className="h-6 w-6 text-rose-500" />
-                      )}
-                    </div>
+                    {/* Icon & Details Row */}
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                      {/* Icon */}
+                      <div
+                        className={cn(
+                          "flex-shrink-0 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-2xl transition-transform group-hover:scale-105",
+                          isIncome ? "bg-emerald-500/10" : "bg-rose-500/10",
+                        )}
+                        style={category?.color ? { backgroundColor: `${category.color}15` } : {}}
+                      >
+                        {isIncome ? (
+                          <ArrowDownLeft className="h-5 w-5 sm:h-6 sm:h-6 text-emerald-500" />
+                        ) : (
+                          <ArrowUpRight className="h-5 w-5 sm:h-6 sm:h-6 text-rose-500" />
+                        )}
+                      </div>
 
-                    {/* Details */}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-foreground tracking-tight">{category?.name || "Sin categoría"}</p>
-                      {transaction.description && (
-                        <p className="text-sm text-muted-foreground truncate font-medium">
-                          {transaction.description}
+                      {/* Details */}
+                      <div className="min-w-0 flex-1">
+                        <p className="font-black text-base sm:text-lg text-foreground tracking-tight truncate">
+                          {category?.name || "Sin categoría"}
                         </p>
-                      )}
+                        {transaction.description && (
+                          <p className="text-sm sm:text-base text-muted-foreground truncate font-medium mt-0.5">
+                            {transaction.description}
+                          </p>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Amount */}
-                    <div className="text-right">
-                      <p className={cn("font-bold text-lg tabular-nums", isIncome ? "text-emerald-500" : "text-rose-500")}>
+                    {/* Amount & More Info Row */}
+                    <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1 sm:text-right pl-[52px] sm:pl-0">
+                      <p className={cn(
+                        "font-black text-xl sm:text-2xl tabular-nums tracking-tight leading-none", 
+                        isIncome ? "text-emerald-500" : "text-rose-500"
+                      )}>
                         {isIncome ? "+" : "-"}
-                        {formatCurrency(transaction.amount, "USD")}
+                        {formatCurrency(transaction.amount, currency)}
                       </p>
-                      <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">
+                      <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">
                         {transaction.payment_method.replace('_', ' ')}
                       </p>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* Actions - Visible by default on mobile, hover on desktop */}
+                    <div className="absolute top-2 right-2 sm:relative sm:top-0 sm:right-0 flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-background/80 dark:bg-card/80 backdrop-blur-sm sm:bg-transparent p-1 sm:p-0 rounded-xl border border-border/50 sm:border-none shadow-sm sm:shadow-none">
                       <button
                         onClick={() => setEditingTransaction(transaction)}
-                        className="p-2 rounded-xl hover:bg-muted text-muted-foreground hover:text-primary transition-colors"
+                        className="p-2 sm:p-2 rounded-lg sm:rounded-xl bg-muted/50 sm:bg-transparent hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                         title="Editar"
                       >
-                        <Edit2 className="h-4.5 w-4.5" />
+                        <Edit2 className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                       </button>
                       <button
                         onClick={() => setDeletingId(transaction.id)}
-                        className="p-2 rounded-xl hover:bg-rose-500/10 text-muted-foreground hover:text-rose-500 transition-colors"
+                        className="p-2 sm:p-2 rounded-lg sm:rounded-xl bg-muted/50 sm:bg-transparent hover:bg-rose-500/10 text-muted-foreground hover:text-rose-500 transition-colors"
                         title="Eliminar"
                       >
-                        <Trash2 className="h-4.5 w-4.5" />
+                        <Trash2 className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                       </button>
                     </div>
                   </div>

@@ -11,7 +11,7 @@ export interface MonthlyReport {
 export interface ReportResponse {
   success: boolean;
   data: {
-    report: MonthlyReport[];
+    report: any[];
   };
 }
 
@@ -20,8 +20,20 @@ export const reportService = {
     const { data } = await apiClient.get<ReportResponse>("/reports/monthly", {
       params: { year, month },
     });
+    
     // Return the first report entry or a default empty one
-    return data.data.report[0] || {
+    const reportData = data.data.report[0];
+    if (reportData) {
+      return {
+        summary_year: Number(reportData.summary_year),
+        summary_month: Number(reportData.summary_month),
+        total_income: Number(reportData.total_income),
+        total_expense: Number(reportData.total_expense),
+        balance: Number(reportData.balance),
+      };
+    }
+
+    return {
       summary_year: year || new Date().getFullYear(),
       summary_month: month || new Date().getMonth() + 1,
       total_income: 0,
@@ -29,4 +41,15 @@ export const reportService = {
       balance: 0,
     };
   },
+
+  getHistoricalReports: async (): Promise<MonthlyReport[]> => {
+    const { data } = await apiClient.get<ReportResponse>("/reports/monthly");
+    return data.data.report.map((reportData: any) => ({
+      summary_year: Number(reportData.summary_year),
+      summary_month: Number(reportData.summary_month),
+      total_income: Number(reportData.total_income),
+      total_expense: Number(reportData.total_expense),
+      balance: Number(reportData.balance),
+    }));
+  }
 };

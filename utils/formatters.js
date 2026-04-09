@@ -6,11 +6,11 @@
 /**
  * Format a number as currency
  * @param {number} amount - Amount to format
- * @param {string} currency - Currency code (default: USD)
+ * @param {string} currency - Currency code (default: COP)
  * @returns {string} - Formatted currency string
  */
-export function formatCurrency(amount, currency = "USD") {
-  const formatter = new Intl.NumberFormat("es-ES", {
+export function formatCurrency(amount, currency = "COP") {
+  const formatter = new Intl.NumberFormat("es-CO", {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
