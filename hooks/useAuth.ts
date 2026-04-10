@@ -10,39 +10,21 @@ export function useAuth() {
   const router = useRouter();
   const { 
     user, 
-    accessToken, 
     isAuthenticated, 
     isLoading, 
     setAuth, 
-    setTokens, 
     logout: clearStore, 
     setLoading 
   } = useAuthStore();
 
-  // Initialize session: Check if we have a refresh token and restore user
+  // Initialize session: Try to fetch user data (which will inherently use the HttpOnly cookie)
   useEffect(() => {
     const initSession = async () => {
-      const refreshToken = localStorage.getItem("refreshToken");
-      
-      if (!refreshToken) {
-        setLoading(false);
-        return;
-      }
-
       try {
-        // First, get a new access token
-        const refreshData = await authService.refreshToken(refreshToken);
-        const { accessToken: newAccess, refreshToken: newRefresh } = refreshData.data;
-        
-        // Update tokens in state (so the next call has Authorization header)
-        setTokens(newAccess, newRefresh);
-        
-        // Then, get user profile
         const userData = await authService.getMe();
-        setAuth(userData.data.user, newAccess, newRefresh);
+        setAuth(userData.data.user);
       } catch (error) {
-        console.error("Session initialization failed:", error);
-        localStorage.removeItem("refreshToken");
+        console.error("Session initialization failed - user not logged in");
         clearStore();
       } finally {
         setLoading(false);
@@ -52,15 +34,14 @@ export function useAuth() {
     if (!isAuthenticated && isLoading) {
       initSession();
     }
-  }, [isAuthenticated, isLoading, setAuth, setTokens, clearStore, setLoading]);
+  }, [isAuthenticated, isLoading, setAuth, clearStore, setLoading]);
 
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
       const res = await authService.login(email, password);
-      const { user, accessToken, refreshToken } = res.data;
-      
-      setAuth(user, accessToken, refreshToken);
+      // Backend now sends cookies automatically
+      setAuth(res.data.user);
       toast.success("Login exitoso");
       router.push("/");
     } catch (error: any) {
@@ -88,13 +69,10 @@ export function useAuth() {
   };
 
   const logout = useCallback(async () => {
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (refreshToken) {
-      try {
-        await authService.logout(refreshToken);
-      } catch (e) {
-        console.error("Logout error on server:", e);
-      }
+    try {
+      await authService.logout();
+    } catch (e) {
+      console.error("Logout error on server:", e);
     }
     clearStore();
     router.push("/login");
@@ -107,9 +85,7 @@ export function useAuth() {
       const res = await authService.updateProfile(data);
       const updatedUser = res.data.user;
       
-      const refreshToken = localStorage.getItem("refreshToken") || "";
-      setAuth(updatedUser, accessToken!, refreshToken);
-      
+      setAuth(updatedUser);
       toast.success("Configuración actualizada");
       return updatedUser;
     } catch (error: any) {
@@ -123,7 +99,6 @@ export function useAuth() {
 
   return {
     user,
-    accessToken,
     isAuthenticated,
     isLoading,
     login,

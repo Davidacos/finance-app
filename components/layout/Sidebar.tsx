@@ -1,15 +1,27 @@
-"use client"
+"use client";
 
-import { usePathname } from "next/navigation"
-import Link from "next/link"
-import Image from "next/image"
-import { LayoutDashboard, ArrowLeftRight, PlusCircle, Tags, Settings, X, Wallet, LogOut, Repeat, BarChart3, FileBox } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useAuth } from "@/hooks/useAuth"
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  LayoutDashboard,
+  ArrowLeftRight,
+  PlusCircle,
+  Tags,
+  Settings,
+  X,
+  Wallet,
+  LogOut,
+  Repeat,
+  BarChart3,
+  FileBox,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SidebarProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 /**
@@ -23,77 +35,65 @@ const navItems = [
   { href: "/add-transaction", icon: PlusCircle, label: "Nueva Transacción" },
   { href: "/categories", icon: Tags, label: "Categorías" },
   { href: "/settings", icon: Settings, label: "Configuración" },
-]
+];
 
 /**
  * Sidebar Navigation Component
  * Premium fintech style
  */
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const pathname = usePathname()
-  const { logout, user } = useAuth()
+  const pathname = usePathname();
+  const { logout, user } = useAuth();
 
   return (
     <>
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-foreground/10 backdrop-blur-sm lg:hidden"
-          onClick={onClose}
-          aria-hidden="true"
-        />
-      )}
+      {/* Removed Mobile Overlay since we use Bottom Navigation now */}
 
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full min-h-screen w-72 bg-card border-r border-border/50",
           "transform transition-transform duration-300 ease-in-out",
-          "lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto lg:h-screen",
-          isOpen ? "translate-x-0" : "-translate-x-full",
+          "lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto lg:h-screen hidden lg:flex flex-col", // Solo en desktop
         )}
       >
-        {/* Logo & Close button */}
-        <div className="flex items-center justify-between px-6 py-8">
-          <Link href="/" className="flex items-center gap-3 w-full">
-            <Image 
-              src="/logos/logo_fenixFinance_letraazul.png" 
-              alt="Fenix Finance" 
-              width={180} 
-              height={48} 
-              className="object-contain dark:hidden" 
-              priority
-            />
-            <Image 
-              src="/logos/logo_fenixFinance_letrablanca.png" 
-              alt="Fenix Finance" 
-              width={180} 
-              height={48} 
-              className="object-contain hidden dark:block" 
-              priority
-            />
+        {/* Logo */}
+        <div className="flex items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center w-full">
+            <div className="relative w-16 h-16">
+              <Image
+                src="/icon-192x192.png"
+                alt="Fenix Finance Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <span className="text-xl font-black tracking-tight text-foreground">
+              Fenix
+              <span className="text-indigo-600 dark:text-indigo-400">
+                Finance
+              </span>
+            </span>
           </Link>
-          <button
-            onClick={onClose}
-            className="lg:hidden p-2 rounded-xl hover:bg-muted text-muted-foreground transition-colors"
-            aria-label="Cerrar menú"
-          >
-            <X className="h-5 w-5" />
-          </button>
         </div>
 
         {/* User Info (Mobile mostly) */}
         <div className="px-6 pb-6 lg:hidden">
-           <div className="p-4 rounded-2xl bg-muted/50 border border-border/50">
-              <p className="text-sm font-bold text-foreground truncate">{user?.first_name} {user?.last_name}</p>
-              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-           </div>
+          <div className="p-4 rounded-2xl bg-muted/50 border border-border/50">
+            <p className="text-sm font-bold text-foreground truncate">
+              {user?.first_name} {user?.last_name}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
+              {user?.email}
+            </p>
+          </div>
         </div>
 
         {/* Navigation */}
         <nav className="p-4 space-y-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href
-            const Icon = item.icon
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
 
             return (
               <Link
@@ -107,16 +107,21 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                 )}
               >
-                <Icon className={cn("h-5 w-5", isActive ? "text-white" : "group-hover:text-indigo-500")} />
+                <Icon
+                  className={cn(
+                    "h-5 w-5",
+                    isActive ? "text-white" : "group-hover:text-indigo-500",
+                  )}
+                />
                 <span className="text-[15px]">{item.label}</span>
               </Link>
-            )
+            );
           })}
         </nav>
 
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border/50 bg-muted/20">
-          <button 
+          <button
             onClick={logout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-rose-500 hover:bg-rose-500/10 font-bold transition-all"
           >
@@ -126,5 +131,5 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
       </aside>
     </>
-  )
+  );
 }

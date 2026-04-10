@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { Category, CreateCategoryDTO } from "@/types/category"
 
+import { AVAILABLE_CATEGORY_ICONS, CATEGORY_ICONS_MAP } from "@/lib/icons"
+import { DynamicIcon } from "./DynamicIcon"
+
 /**
  * Predefined color palette for categories
  */
@@ -34,7 +37,7 @@ export function CategoryForm({ initialData = null, type = "expense", onSuccess, 
     name: initialData?.name || "",
     type: initialData?.type || type,
     color: initialData?.color || COLOR_PALETTE[0],
-    icon: initialData?.icon || "tag",
+    icon: initialData?.icon || "shopping-cart",
   })
 
   const [errors, setErrors] = useState<Record<string, string | null>>({})
@@ -115,7 +118,7 @@ export function CategoryForm({ initialData = null, type = "expense", onSuccess, 
         </div>
       )}
 
-      {/* Name */}
+      {/* Name Group */}
       <div className="space-y-2">
         <label className="text-sm font-semibold text-foreground ml-1">Nombre *</label>
         <Input
@@ -132,17 +135,43 @@ export function CategoryForm({ initialData = null, type = "expense", onSuccess, 
         {errors.name && <p className="text-xs text-destructive font-bold ml-1">{errors.name}</p>}
       </div>
 
+      {/* Icon Picker */}
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-foreground ml-1">Ícono representativo</label>
+        <div className="flex flex-wrap gap-2.5 p-1">
+          {AVAILABLE_CATEGORY_ICONS.map((iconName) => {
+            const Icon = CATEGORY_ICONS_MAP[iconName];
+            return (
+              <button
+                key={iconName}
+                type="button"
+                onClick={() => handleChange("icon", iconName)}
+                className={cn(
+                  "w-10 h-10 flex items-center justify-center rounded-xl transition-all",
+                  formData.icon === iconName
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 scale-110"
+                    : "bg-muted hover:bg-muted/70 text-muted-foreground hover:scale-105"
+                )}
+                aria-label={`Seleccionar icono ${iconName}`}
+              >
+                <Icon className="h-5 w-5" />
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       {/* Color Picker */}
       <div className="space-y-2">
         <label className="text-sm font-semibold text-foreground ml-1">Color de identificación</label>
-        <div className="grid grid-cols-5 gap-3 p-1">
+        <div className="flex flex-wrap gap-2.5 p-1">
           {COLOR_PALETTE.map((color) => (
             <button
               key={color}
               type="button"
               onClick={() => handleChange("color", color)}
               className={cn(
-                "w-full aspect-square rounded-xl transition-all relative flex items-center justify-center",
+                "w-10 h-10 rounded-xl transition-all relative flex items-center justify-center",
                 formData.color === color 
                   ? "ring-2 ring-offset-2 ring-offset-background ring-foreground scale-110 shadow-lg" 
                   : "hover:scale-105",
@@ -162,13 +191,10 @@ export function CategoryForm({ initialData = null, type = "expense", onSuccess, 
       <div className="p-5 rounded-2xl bg-muted/30 border border-border/50">
         <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-3">Vista previa</p>
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner" style={{ backgroundColor: `${formData.color}20` }}>
-            <div
-              className="w-3 h-3 rounded-full shadow-sm"
-              style={{ backgroundColor: formData.color }}
-            />
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner" style={{ backgroundColor: `${formData.color}20`, color: formData.color }}>
+            <DynamicIcon name={formData.icon} className="h-6 w-6" />
           </div>
-          <span className="font-bold text-lg tracking-tight">{formData.name || "Nombre de categoría"}</span>
+          <span className="font-bold text-lg tracking-tight">{formData.name || "Nueva categoría"}</span>
         </div>
       </div>
 

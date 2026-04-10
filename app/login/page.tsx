@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useAuth } from "@/hooks/useAuth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -96,6 +97,12 @@ export default function LoginPage() {
         </div>
 
         <div className="w-full max-w-[440px] relative z-10 animate-in fade-in slide-in-from-bottom-6 duration-700 ease-out">
+          {/* Logo Mobile */}
+          <div className="flex lg:hidden items-center justify-center gap-3 mb-8">
+             <Image src="/icon-192x192.png" alt="FenixFinance Logo" width={48} height={48} className="object-contain" />
+             <span className="text-3xl font-black tracking-tight">Fenix<span className="text-indigo-600 dark:text-indigo-400">Finance</span></span>
+          </div>
+
           {/* Header */}
           <div className="text-center lg:text-left mb-10">
             <h2 className="text-4xl font-black text-foreground tracking-tight mb-3">Bienvenido</h2>

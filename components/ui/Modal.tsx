@@ -70,7 +70,7 @@ export function Modal({ isOpen, onClose, title, children, className, size = "md"
         aria-modal="true"
         aria-labelledby="modal-title"
         className={cn(
-          "relative w-full bg-card rounded-[2rem] shadow-2xl border border-border/50 overflow-hidden",
+          "relative w-full bg-card rounded-[2rem] shadow-2xl border border-border/50 overflow-hidden flex flex-col max-h-[85vh]",
           "animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4 duration-300 ease-out",
           sizeClasses[size],
           className,
@@ -78,7 +78,7 @@ export function Modal({ isOpen, onClose, title, children, className, size = "md"
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-8 py-6 border-b border-border/50">
+          <div className="flex items-center justify-between px-8 py-6 border-b border-border/50 flex-shrink-0">
             <h2 id="modal-title" className="text-xl font-black text-foreground tracking-tight">
               {title}
             </h2>
@@ -93,7 +93,7 @@ export function Modal({ isOpen, onClose, title, children, className, size = "md"
         )}
 
         {/* Content */}
-        <div className="px-8 py-6">{children}</div>
+        <div className="px-8 py-6 overflow-y-auto">{children}</div>
       </div>
     </div>
   )

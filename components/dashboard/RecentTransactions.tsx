@@ -6,6 +6,7 @@ import { formatCurrency } from "@/utils/formatters"
 import { formatDate } from "@/utils/dates"
 import { cn } from "@/lib/utils"
 import { Transaction } from "@/types/transaction"
+import { DynamicIcon } from "@/components/categories/DynamicIcon"
 
 interface RecentTransactionsProps {
   transactions: Transaction[]
@@ -40,22 +41,31 @@ export function RecentTransactions({ transactions, currency = "COP" }: RecentTra
             className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
           >
             {/* Icon */}
-            <div
-              className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-xl",
-                isIncome ? "bg-emerald-500/10" : "bg-rose-500/10",
-              )}
-            >
-              {isIncome ? (
-                <ArrowDownLeft className="h-5 w-5 text-emerald-500" />
-              ) : (
-                <ArrowUpRight className="h-5 w-5 text-rose-500" />
-              )}
-            </div>
+            {category ? (
+               <div
+                  className="flex items-center justify-center w-10 h-10 rounded-xl shadow-inner"
+                  style={{ backgroundColor: `${category.color}15`, color: category.color || (isIncome ? '#10b981' : '#f43f5e') }}
+               >
+                  <DynamicIcon name={category.icon} className="h-5 w-5" />
+               </div>
+            ) : (
+               <div
+                  className={cn(
+                  "flex items-center justify-center w-10 h-10 rounded-xl",
+                  isIncome ? "bg-emerald-500/10" : "bg-rose-500/10",
+                  )}
+               >
+                  {isIncome ? (
+                  <ArrowDownLeft className="h-5 w-5 text-emerald-500" />
+                  ) : (
+                  <ArrowUpRight className="h-5 w-5 text-rose-500" />
+                  )}
+               </div>
+            )}
 
             {/* Details */}
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-card-foreground truncate">{category?.name || "Sin categoría"}</p>
+            <div className="flex-1 min-w-0 ml-1">
+              <p className="font-medium text-foreground truncate">{category?.name || "Sin categoría"}</p>
               <p className="text-xs text-muted-foreground">
                 {formatDate(transaction.transaction_date, "relative")}
                 {transaction.description && ` · ${transaction.description}`}

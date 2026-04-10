@@ -8,6 +8,7 @@ import { CategoryForm } from "./CategoryForm"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Category } from "@/types/category"
+import { DynamicIcon } from "./DynamicIcon"
 
 interface CategoryListProps {
   type?: string
@@ -64,12 +65,9 @@ export function CategoryList({ type = "expense", categories }: CategoryListProps
               {/* Color indicator / Icon */}
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"
-                style={{ backgroundColor: `${category.color}15` }}
+                style={{ backgroundColor: `${category.color}15`, color: category.color }}
               >
-                <div 
-                  className="w-3.5 h-3.5 rounded-full shadow-sm"
-                  style={{ backgroundColor: category.color || '#6366f1' }}
-                />
+                <DynamicIcon name={category.icon} className="h-6 w-6" />
               </div>
 
               {/* Actions */}

@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import { AuthResponse, RefreshResponse } from "@/types/auth";
+import { AuthResponse } from "@/types/auth";
 
 export const authService = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
@@ -15,15 +15,13 @@ export const authService = {
     return data;
   },
 
-  refreshToken: async (refreshToken: string): Promise<RefreshResponse> => {
-    const { data } = await apiClient.post<RefreshResponse>("/auth/refresh-token", {
-      refreshToken,
-    });
+  refreshToken: async (): Promise<any> => {
+    const { data } = await apiClient.post("/auth/refresh-token");
     return data;
   },
 
-  logout: async (refreshToken: string): Promise<void> => {
-    await apiClient.post("/auth/logout", { refreshToken });
+  logout: async (): Promise<void> => {
+    await apiClient.post("/auth/logout");
   },
 
   getMe: async (): Promise<any> => {
